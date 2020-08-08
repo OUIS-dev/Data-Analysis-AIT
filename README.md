@@ -21,9 +21,10 @@ The output files are :
 ### Changelog:
 
 #### v1.1 :
+- Added 'config.ini' file to set all default parameters inside.
 - Enhenced Console Display.
 - Fixed file name in figure title.
-- Other minor changes.
+- Other changes.
 
 
 #### v1.0 :
