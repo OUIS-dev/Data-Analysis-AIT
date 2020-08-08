@@ -107,18 +107,13 @@ Run the script :
 (env) $ python main.py
 ```
 
-# Usage
+# Usage Example
 ```sh
-(env) [ouis@ouis-pc src]$ python main.py
+(env) [ouis@ouis-pc src]$ python main.py 
 
 Script Started ...
 
-Enter 'CSV' Directory : data_samples
-
-Creating New Directory : 'Processed Data' in the working directory
-'data_samples' ...
-Successfully created the directory. 
-Directory path : data_samples/Processed Data                                                                           
+Enter 'CSV' Directory : /home/ouis/Documents/Dev/data_analysis_ait/data_samples/
 
 --------------------------------------------   Combined Option   ---------------------------------------------
 
@@ -129,7 +124,7 @@ Please select an option : 1
 
 -----------------------------------------------   Files List   -----------------------------------------------
 
-Directory : data_samples
+Directory : /home/ouis/Documents/Dev/data_analysis_ait/data_samples/
 
 index : [0] --- File Name : 20200729__LTN R5_8A_32V_256W_20N_test_OP1Wfm
 index : [1] --- File Name : 20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm
@@ -143,22 +138,17 @@ Multiple Files (option 1) : input files indexes and separate between them with '
 Multiple Files (option 2) : input idx_start and idx_end separated by ':' to get all files having indexes between them
 All File : just input 'all' or 'a'
 
-input index(es) : 0.1
+input index(es) : 0
 
 
----------------------------------------------   Selected Files   ---------------------------------------------
+---------------------------------------------   Selected file   ----------------------------------------------
 
 index : [0] --- File Name : ('20200729__LTN R5_8A_32V_256W_20N_test_OP1Wfm_Ch1.csv', '20200729__LTN R5_8A_32V_256W_20N_test_OP1Wfm_Ch2.csv')
-index : [1] --- File Name : ('20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm_Ch1.csv', '20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm_Ch2.csv')
 
 
-[1/2] Processing File : 20200729__LTN R5_8A_32V_256W_20N_test_OP1Wfm                                                   
 
+[1/1] Processing File : 20200729__LTN R5_8A_32V_256W_20N_test_OP1Wfm                                                   
 
-Creating New Directory : '20200729__LTN R5_8A_32V_256W_20N_test_OP1Wfm' in the working directory
-'data_samples/Processed Data' ...
-Successfully created the directory. 
-Directory path : data_samples/Processed Data/20200729__LTN R5_8A_32V_256W_20N_test_OP1Wfm                              
 
 ----------------------------------------------------------------------------------------------------
 
@@ -177,15 +167,15 @@ Figure 'png' file created with success : '20200729__LTN R5_8A_32V_256W_20N_test_
 Delta Time Info :
 +-------------------------+-------------+
 |         Channel         | Tension (V) |
-|       Δt Raw (ms)       |    71.09    |
-|     Δt Filtred (ms)     |    72.32    |
-|    Difference Δt (ms)   |     1.23    |
+|       Δt Raw (ms)       |    71.10    |
+|     Δt Filtred (ms)     |    72.34    |
+|    Difference Δt (ms)   |     1.24    |
 |                         |             |
 |   Time start Raw (ms)   |  -0.071100  |
-|    Time End Raw (ms)    |  -0.000006  |
+|    Time End Raw (ms)    |   0.000000  |
 |                         |             |
 | Time start Filtred (ms) |  -0.072332  |
-|  Time End Filtred (ms)  |  -0.000016  |
+|  Time End Filtred (ms)  |   0.000010  |
 +-------------------------+-------------+
 
 ----------------------------------------------------------------------------------------------------
@@ -222,78 +212,6 @@ inserting Data ... OK
 inserting Charts ... OK
 Closing Excel File ... OK
 Excel file created with success : 20200729__LTN R5_8A_32V_256W_20N_test_OP1Wfm.xlsx
-
-
-[2/2] Processing File : 20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm                                                   
-
-
-Creating New Directory : '20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm' in the working directory
-'data_samples/Processed Data' ...
-Successfully created the directory. 
-Directory path : data_samples/Processed Data/20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm                              
-
-----------------------------------------------------------------------------------------------------
-
-+---------------------------+
-|  Channel 1 : Tension (V)  |
-+---------------------------+
-
-Filtering Data (N=51) : [=====================================================================] 100%
-
-Creating Figures...
-Figure 'png' file created with success : '20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm_Ch1_line=false.png'
-Figure 'png' file created with success : '20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm_Ch1_line=true.png'
-Figure 'png' file created with success : '20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm_Ch1_line=false_filtred_N=51.png'
-Figure 'png' file created with success : '20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm_Ch1_line=true_filtred_N=51.png'
-
-Delta Time Info :
-+-------------------------+-------------+
-|         Channel         | Tension (V) |
-|       Δt Raw (ms)       |    81.89    |
-|     Δt Filtred (ms)     |    84.08    |
-|    Difference Δt (ms)   |     2.19    |
-|                         |             |
-|   Time start Raw (ms)   |  -0.081896  |
-|    Time End Raw (ms)    |  -0.000006  |
-|                         |             |
-| Time start Filtred (ms) |  -0.084098  |
-|  Time End Filtred (ms)  |  -0.000018  |
-+-------------------------+-------------+
-
-----------------------------------------------------------------------------------------------------
-
-+---------------------------+
-|  Channel 2 : Current (A)  |
-+---------------------------+
-
-Filtering Data (N=51) : [=====================================================================] 100%
-
-Creating Figures...
-Figure 'png' file created with success : '20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm_Ch2_line=false.png'
-Figure 'png' file created with success : '20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm_Ch2_line=true.png'
-Figure 'png' file created with success : '20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm_Ch2_line=false_filtred_N=51.png'
-Figure 'png' file created with success : '20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm_Ch2_line=true_filtred_N=51.png'
-
-Delta Time Info :
-+-------------------------+-------------+
-|         Channel         | Current (A) |
-|       Δt Raw (ms)       |    81.89    |
-|     Δt Filtred (ms)     |    84.05    |
-|    Difference Δt (ms)   |     2.16    |
-|                         |             |
-|   Time start Raw (ms)   |  -0.081896  |
-|    Time End Raw (ms)    |  -0.000006  |
-|                         |             |
-| Time start Filtred (ms) |  -0.084072  |
-|  Time End Filtred (ms)  |  -0.000018  |
-+-------------------------+-------------+
-
-Creating Combined Excel Sheet :
-
-inserting Data ... OK
-inserting Charts ... OK
-Closing Excel File ... OK
-Excel file created with success : 20200729__LTN R5_8A_32V_256W_20N_test_OP2Wfm.xlsx
 
 
 ========================================   PROCESSING FINISHED   ========================================
