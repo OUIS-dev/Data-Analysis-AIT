@@ -65,14 +65,25 @@ The output files are :
 
 # Installation
 
-Required 'Python 3' to run and 'Git' + 'pip' to install.
-- if 'pip' is not working while installation, please try using 'pip3'.
-##### Check Python + Git + pip are installed :
+### Requirement
+#### Python3 : To run the code
+Check installation : ```$ python --version```
+
+Download link : [https://www.python.org/downloads]
+
+#### Git + pip/pip3 + virtualenv : To install the code
+
+Check installation :
 ```sh
-$ python --version
 $ git --version
 $ pip --version             or          $ pip3 --version
+$ virtualenv --version
 ```
+
+Git Download Link : [https://git-scm.com/downloads]
+
+Install virtualenv : ```$ pip install virtualenv```
+
 
 ### 1. Clone repository :
 ```sh
@@ -88,10 +99,7 @@ $ cd data-analysis-ait
 ```sh
 $ virtualenv env
 ```
-- If virtualenv is not installed, you can install it using this command :
-```sh
-$ pip install virtualenv
-```
+- If virtualenv is not installed, you can install it using this command : ```$ pip install virtualenv```
 
 ### 4. Activate the virtualenv :
 - Linux or Mac :
