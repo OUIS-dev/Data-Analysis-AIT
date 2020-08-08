@@ -65,20 +65,26 @@ The output files are :
 
 # Installation
 
-Required Python 3+ to run
-(if 'pip' is not working while installation, please try using 'pip3')
+Required 'Python 3' to run and 'Git' + 'pip' to install.
+- if 'pip' is not working while installation, please try using 'pip3'.
+##### Check Python + Git + pip are installed :
+```sh
+$ python --version
+$ git --version
+$ pip --version             or          $ pip3 --version
+```
 
-Clone repository :
+### 1. Clone repository :
 ```sh
 $ git clone https://github.com/OUIS-dev/data-analysis-ait.git
 ```
 
-Change directory to the new downloaded directory :
+### 2. Change directory to the new downloaded directory :
 ```sh
 $ cd data-analysis-ait
 ```
 
-Create new virtual envirement : 
+### 3. Create new virtual envirement : 
 ```sh
 $ virtualenv env
 ```
@@ -86,22 +92,23 @@ $ virtualenv env
 ```sh
 $ pip install virtualenv
 ```
-Activate the virtualenv :
-- Linux/Mac
+
+### 4. Activate the virtualenv :
+- Linux or Mac :
 ```sh
 $ source env/bin/activate
 ```
-- Windows
+- Windows CMD :
 ```sh
 $ \env\Scripts\activate.bat
 ```
 
-install required python packages:
+### 5. install required python packages :
 ```sh
 (env) $ pip install -r requirement.txt
 ```
 
-Run the script :
+### 6. Run the script :
 ```sh
 (env) $ cd src
 (env) $ python main.py
