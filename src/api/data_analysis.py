@@ -28,8 +28,10 @@ v1.0:
     - Added CSV_Object Class and Delta child Class in it.
     - Added Delta Class to store delta time info.
     - CSV_Object :multiple methods implemented in it :
-        - _extract_info_from_file_name()
-        - _load_csv_data()
+        - extract_info_from_file_name()
+        - read_default_parameters_from_ini()
+        - load_csv_data()
+        - camibrate_data()
         - generate_excel()
         - create_plot_data()
         - plot_show()
@@ -63,6 +65,7 @@ import statistics, progressbar
 from colorama import Fore, Back, Style, init
 init(autoreset=True)
 from prettytable import PrettyTable
+import configparser
 
 # CSV CLASS : ################################################################################
 
@@ -76,17 +79,19 @@ class Delta():
     value_end = None
         
 class CSV_Object():
-    def __init__(self, file_path, processed_dir:str='', delimiter:str=',', calibration_value:float=1):
+    def __init__(self, file_path, delimiter:str=',', calibration_value:float=1, combined_flag:bool=False):
         self.file_path = file_path
         self.file_name = os.path.basename(self.file_path)
         self.directory = os.path.dirname(self.file_path)
-        self.processed_dir = processed_dir
+        self.processed_dir = None
         self.delimiter = delimiter
         self.calibration_value = calibration_value
         self.data = []      # List of 'dict' type elements --> data = [{'time':time, 'value':value}, ...]
         self.times = []     # List of 'float' type elements
         self.values = []    # List of 'float' type elements
+        self.combined_flag = combined_flag
 
+        self.N = None
         self.values_filtred = []  # used to store the filtred values
         self.threshold_low = None
         self.threshold_high = None
@@ -105,10 +110,12 @@ class CSV_Object():
         self.Delta = Delta()
         self.DeltaFiltred = Delta()
 
-        self._extract_info_from_file_name()
-        self._load_csv_data()
+        self.extract_info_from_file_name()
+        self.read_default_parameters_from_ini()
+        self.load_csv_data()
+        self.calibrate_data()
 
-    def _extract_info_from_file_name(self):
+    def extract_info_from_file_name(self):
         # Extract Aquisition Date :
         aquisition_date_str = self.file_name[:8]
         self.aquisition_date = datetime.strptime(aquisition_date_str, '%Y%m%d')
@@ -117,7 +124,33 @@ class CSV_Object():
         self.channel_number = int(self.file_name[-5:-4])
 
 
-    def _load_csv_data(self):
+    def read_default_parameters_from_ini(self):
+        config = configparser.ConfigParser()
+        src_dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        ini_path = os.path.join(src_dir_path, 'config.ini')
+        config.read(ini_path)
+        
+        self.N = int(config['DEFAULT'].get('N'))
+        self.processed_dir = config['DEFAULT'].get('processed_dir')
+        
+        if self.combined_flag:
+            self.processed_dir = os.path.join(self.processed_dir, self.file_name[:-8])
+        else:
+            self.processed_dir = os.path.join(self.processed_dir, self.file_name[:-4])
+        
+        # Create processed dir :
+        create_dir(self.directory, dir_name=self.processed_dir)
+
+        if self.channel_number == 1:
+            self.calibration_value = float(config['DEFAULT'].get('calibration_value_ch1'))
+            self.threshold_low = float(config['DEFAULT'].get('threshold_low_ch1'))
+            self.threshold_high = float(config['DEFAULT'].get('threshold_high_ch1'))
+        else:
+            self.calibration_value = float(config['DEFAULT'].get('calibration_value_ch2'))
+            self.threshold_low = float(config['DEFAULT'].get('threshold_low_ch2'))
+            self.threshold_high = float(config['DEFAULT'].get('threshold_high_ch2'))
+
+    def load_csv_data(self):
         with open(self.file_path, newline = '') as csvfile:
             csv_reader = csv.reader(csvfile, delimiter = self.delimiter)
 
@@ -125,9 +158,6 @@ class CSV_Object():
             for i, row in enumerate(csv_reader):
                 time    = float(row[3])
                 value   = float(row[4])
-                
-                if self.calibration_value != 1.0:
-                    value = value * self.calibration_value
 
                 self.data.append({
                                 'time':time,
@@ -180,8 +210,6 @@ class CSV_Object():
             for i, row in enumerate(csv_reader):
                 time    = float(row[3])
                 value   = float(row[4])
-                if self.calibration_value != 1.0:
-                    value = value * self.calibration_value
                 self.data.append({
                                 'time':time,
                                 'value':value
@@ -190,6 +218,9 @@ class CSV_Object():
                 self.times.append(time)
                 self.values.append(value)
 
+    def calibrate_data(self):
+        for i in range(len(self.values)):
+            self.values[i] = self.values[i] * self.calibration_value
 
     def generate_excel(self):
         print('\nCreating Excel Sheet ...', end=' ')
@@ -262,20 +293,20 @@ class CSV_Object():
         ax = fig.add_subplot(111)
                 
         ax.set_xlabel(x_label)
-
+        
         if self.channel_number == 1:
-            ax.plot(x_axis_data, y_axis_data, linewidth=1, color='yellow')
-            time_v_pos = 1 * self.calibration_value
-            delta_v_pos = 31 * self.calibration_value
+            color = 'yellow'
             if y_label == '':
                 ax.set_ylabel('Tension (V)')
         else:
-            ax.plot(x_axis_data, y_axis_data, linewidth=1, color='cyan')
-            time_v_pos = 0.08 * self.calibration_value
-            delta_v_pos = 0.70 * self.calibration_value
+            color = 'cyan'
             if y_label == '':
                 ax.set_ylabel('Current (A)')
-        
+
+        ax.plot(x_axis_data, y_axis_data, linewidth=1, color=color)
+        time_v_pos = self.threshold_low
+        delta_v_pos = self.threshold_high
+
         if black_bg:
             ax.set_facecolor((0,0,0))
             text_color = 'white'
@@ -315,15 +346,15 @@ class CSV_Object():
 
 
 
-    def apply_moving_average(self, N:int=31, filter_step:int=1):
+    def apply_moving_average(self):
         self.values_filtred = []
-        n = int(N/2)
+        n = int(self.N/2)
         self.values_filtred [:n-1] = self.values[:n-1]
         print('')
-        bar = progressbar.ProgressBar(maxval=self.record_length-N+1, widgets=[progressbar.Bar('=', f'Filtering Data (N={N}) : [', ']'), ' ', progressbar.Percentage()], term_width=100)
+        bar = progressbar.ProgressBar(maxval=self.record_length-self.N+1, widgets=[progressbar.Bar('=', f'Filtering Data (N={self.N}) : [', ']'), ' ', progressbar.Percentage()], term_width=100)
         bar.start()
         idx = 0
-        for i in range(n, self.record_length - n + 1, filter_step):
+        for i in range(n, self.record_length - n + 1):
             mean_value = statistics.mean(self.values[i-n:i+n+1])
             self.values_filtred.append(mean_value)
             bar.update(idx)
@@ -334,6 +365,9 @@ class CSV_Object():
 
 
     def _extract_indexes(self, values):
+        time_start_idx = None
+        time_end_idx = None
+
         if self.channel_number == 1:
             for i, value in enumerate(values):
                 if float(value) < self.threshold_low :
@@ -354,18 +388,7 @@ class CSV_Object():
         
         return [time_start_idx, time_end_idx]
 
-    def calculate_delta_time(self, threshold_low=None, threshold_high=None):
-        time_start_idx = None
-        time_end_idx = None
-        
-        if threshold_low is None:
-            if self.channel_number == 1:    # Tension (V)
-                self.threshold_low = float(3) * self.calibration_value
-                self.threshold_high = float(30) * self.calibration_value
-            else:                           # Current (A)
-                self.threshold_low = float(0.1) * self.calibration_value
-                self.threshold_high = float(0.7) * self.calibration_value
-        
+    def calculate_delta_time(self):
         # RAW DATA
         time_start_idx, time_end_idx = self._extract_indexes(self.values)   # Detect Start/End of signal variation
         delta_time = round( abs(self.times[time_end_idx] - self.times[time_start_idx]) * 1000, 2)
@@ -393,6 +416,7 @@ class CSV_Object():
 
 # FUNCTIONS :   ############################################################################
 
+
 def enter_directory():
     while True:
         print("\nScript Started ...")
@@ -407,12 +431,12 @@ def enter_directory():
 
 def create_dir(directory, dir_name:str='Processed'):
     try:
-        print(f"\nCreating New Directory : '{dir_name}' in the working directory\n'{directory}' ...")
+        #print(f"\nCreating New Directory : '{dir_name}' in the working directory\n'{directory}' ...")
         dir_path = os.path.join(directory, dir_name)
-        os.mkdir(dir_path)
+        os.makedirs(dir_path)
     except OSError:
         if os.path.isdir(dir_path):
-            print(f"Directory aleady exists : {dir_path}")
+            #print(f"Directory aleady exists : {dir_path}")
             return True
         else:
             print (f"{Fore.RED}Creation of the directory failed ! \nDirectory path : {dir_path}")

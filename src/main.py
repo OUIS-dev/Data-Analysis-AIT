@@ -20,14 +20,15 @@ Actual Version  : 1.1
 Changelog:
 
 v1.1:
+    - Added 'config.ini' file to set all default parameters inside.
     - Enhenced Console Display.
     - Fixed file name in figure title.
     - Other minor changes.
 
 
 v1.0:
-    - Select Working directory where the CSV files are stored
-    - Creation of new directory to save the processed data : Excel sheets + images
+    - Select Working csv_directory where the CSV files are stored
+    - Creation of new csv_directory to save the processed data : Excel sheets + images
     - The script lists all 'CSV' files in the working directory, each one with its own index
     - The user select which indexes to process. The selection is possible using these methods:
         - One File : input the file index
@@ -35,7 +36,7 @@ v1.0:
         - Multiple Files (option 2) : input idx_start and idx_end separated by ':' to get all files having indexes between them
         - All File : just input 'all' or 'a'
     - It is possible to process each file seprately, or as a combined channels (Ch1_Tension + Ch2_Current)
-    - The implemented filter used to filter the data is SMA : Simple Moving Average with a windows Size = N (fixed in the main)
+    - The implemented filter used to filter the data is SMA : Simple Moving Average with a windows Size = N (fixed in config.ini)
     
     - The process of combined files ch1 + ch2:
         - The files list will be displayed using same index for a combined files (ch1 + ch2)
@@ -68,138 +69,122 @@ from api import data_analysis
 init(autoreset=True)
 
 
-###    Main Function    ############################################################################
+###    Functions    ############################################################################
+
+def combined_files_processing(csv_directory, file_names_list):
+    for i, file_compined in enumerate(file_names_list):
+        file_name_ch1 = file_compined[0]
+        file_name_ch2 = file_compined[1]
+        
+        print(f"{Fore.BLACK}{Back.WHITE}\n\n[{i+1}/{len(file_names_list)}] Processing File : {file_name_ch1[:-8]}\n")
+
+        obj_ch1 = data_analysis.CSV_Object(file_path=os.path.join(csv_directory, file_name_ch1), combined_flag=True)
+        obj_ch2 = data_analysis.CSV_Object(file_path=os.path.join(csv_directory, file_name_ch2), combined_flag=True)
+
+        # Channel 1 :   ------------------------------------------
+        print('\n' + '-'*100 + '\n')
+        print(f'{Fore.BLACK}{Back.WHITE}+---------------------------+')
+        print(f'{Fore.BLACK}{Back.WHITE}|  Channel 1 : Tension (V)  |')
+        print(f'{Fore.BLACK}{Back.WHITE}+---------------------------+')
+
+        obj_ch1.apply_moving_average()  # it will generate data into 'self.values_filtred' 
+        obj_ch1.calculate_delta_time()
+
+        # Create plot images :
+        # RAW
+        print("\nCreating Figures...")
+        file_name=f'{obj_ch1.file_name[:-4]}_line=false.png'
+        obj_ch1.create_plot_data(filtred=False, add_vline=False, file_name=file_name, title=file_name)
+        
+        file_name=f'{obj_ch1.file_name[:-4]}_line=true.png'
+        obj_ch1.create_plot_data(filtred=False, add_vline=True, file_name=file_name, title=file_name)
+        
+        # FILTRED
+        file_name=f'{obj_ch1.file_name[:-4]}_line=false_filtred_N={obj_ch1.N}.png'
+        obj_ch1.create_plot_data(filtred=True, add_vline=False, file_name=file_name, title=file_name)
+
+        file_name=f'{obj_ch1.file_name[:-4]}_line=true_filtred_N={obj_ch1.N}.png'
+        obj_ch1.create_plot_data(filtred=True, add_vline=True, file_name=file_name, title=file_name)
+
+        data_analysis.print_processing_info(obj_ch1)
+
+        # Channel 2 :   ------------------------------------------
+        print('\n' + '-'*100 + '\n')
+        print(f'{Fore.BLACK}{Back.WHITE}+---------------------------+')
+        print(f'{Fore.BLACK}{Back.WHITE}|  Channel 2 : Current (A)  |')
+        print(f'{Fore.BLACK}{Back.WHITE}+---------------------------+')
+
+        obj_ch2.apply_moving_average()  # it will generate data into 'self.values_filtred' 
+        obj_ch2.calculate_delta_time()
+
+        # Create plot images :
+        # RAW
+        print("\nCreating Figures...")
+        file_name=f'{obj_ch2.file_name[:-4]}_line=false.png'
+        obj_ch2.create_plot_data(filtred=False, add_vline=False, file_name=file_name, title=file_name)
+
+        file_name=f'{obj_ch2.file_name[:-4]}_line=true.png'
+        obj_ch2.create_plot_data(filtred=False, add_vline=True, file_name=file_name, title=file_name)
+        
+        # FILTRED
+        file_name=f'{obj_ch2.file_name[:-4]}_line=false_filtred_N={obj_ch2.N}.png'
+        obj_ch2.create_plot_data(filtred=True, add_vline=False, file_name=file_name, title=file_name)
+
+        file_name=f'{obj_ch2.file_name[:-4]}_line=true_filtred_N={obj_ch2.N}.png'
+        obj_ch2.create_plot_data(filtred=True, add_vline=True, file_name=file_name, title=file_name)
+
+        data_analysis.print_processing_info(obj_ch2)
+
+        # Generate combine Excel File :
+        data_analysis.generate_excel_combined(obj_ch1, obj_ch2)
+
+
+def separate_files_processing(csv_directory, file_names_list):
+    for i, file_name in enumerate(file_names_list):
+        print(f"{Fore.BLACK}{Back.WHITE}\n\n[{i+1}/{len(file_names_list)}] Processing File : {file_name}\n")
+               
+        obj = data_analysis.CSV_Object(file_path=os.path.join(csv_directory, file_name))
+        
+        obj.apply_moving_average()  # it will generate data into 'self.values_filtred' 
+        obj.calculate_delta_time()
+
+        # Create plot images :
+        # RAW
+        print("\nCreating Figures...")
+        file_name=f'{obj.file_name[:-4]}_line=false.png'
+        obj.create_plot_data(filtred=False, add_vline=False, file_name=file_name, title=file_name)
+        
+        file_name=f'{obj.file_name[:-4]}_line=true.png'
+        obj.create_plot_data(filtred=False, add_vline=True, file_name=file_name, title=file_name)
+        
+        # FILTRED 
+        file_name=f'{obj.file_name[:-4]}_line=false_filtred_N={obj.N}.png'
+        obj.create_plot_data(filtred=True, add_vline=False, file_name=file_name, title=file_name)
+        
+        file_name=f'{obj.file_name[:-4]}_line=true_filtred_N={obj.N}.png'
+        obj.create_plot_data(filtred=True, add_vline=True, file_name=file_name, title=file_name)
+
+        data_analysis.print_processing_info(obj)
+        obj.generate_excel()
+
 
 def main():
 
     # Enter CSV Working Directory :
-    directory = data_analysis.enter_directory()
-    
-    # Create new Directory to write in all processed files :
-    processed_dir = 'Processed Data'
-    data_analysis.create_dir(directory, dir_name=processed_dir)
+    csv_directory = data_analysis.enter_directory()
 
     combined = data_analysis.input_combined()
 
     # Get file name list to be processed :
-    file_names_list = data_analysis.get_file_names_list(directory, extension='csv', combined=combined)
-
-    N = 51   # filter window : Must be odd number
+    file_names_list = data_analysis.get_file_names_list(csv_directory, extension='csv', combined=combined)
 
     # -------   Processing :   -------
     if combined:
-        for i, file_compined in enumerate(file_names_list):
-            file_name_ch1 = file_compined[0]
-            file_name_ch2 = file_compined[1]
-            
-            print(f"{Fore.BLACK}{Back.WHITE}\n\n[{i+1}/{len(file_names_list)}] Processing File : {file_name_ch1[:-8]}\n")
-            output_dir_name = file_name_ch1[:-8]
-            data_analysis.create_dir(os.path.join(directory, processed_dir), dir_name=output_dir_name)
-
-            obj_ch1 = data_analysis.CSV_Object(file_path=os.path.join(directory, file_name_ch1),
-                                    processed_dir=os.path.join(processed_dir, output_dir_name))
-            obj_ch2 = data_analysis.CSV_Object(file_path=os.path.join(directory, file_name_ch2),
-                                    processed_dir=os.path.join(processed_dir, output_dir_name),
-                                    calibration_value=10)
-
-            # Channel 1 :   ------------------------------------------
-            print('\n' + '-'*100 + '\n')
-            print(f'{Fore.BLACK}{Back.WHITE}+---------------------------+')
-            print(f'{Fore.BLACK}{Back.WHITE}|  Channel 1 : Tension (V)  |')
-            print(f'{Fore.BLACK}{Back.WHITE}+---------------------------+')
-
-            obj_ch1.apply_moving_average(N)  # it will generate data into 'self.values_filtred' 
-            obj_ch1.calculate_delta_time()
-
-            # Create plot images :
-            # RAW
-            print("\nCreating Figures...")
-            file_name=f'{obj_ch1.file_name[:-4]}_line=false.png'
-            obj_ch1.create_plot_data(filtred=False, add_vline=False, file_name=file_name, title=file_name)
-            
-            file_name=f'{obj_ch1.file_name[:-4]}_line=true.png'
-            obj_ch1.create_plot_data(filtred=False, add_vline=True, file_name=file_name, title=file_name)
-            
-            # FILTRED
-            file_name=f'{obj_ch1.file_name[:-4]}_line=false_filtred_N={N}.png'
-            obj_ch1.create_plot_data(filtred=True, add_vline=False, file_name=file_name, title=file_name)
-
-            file_name=f'{obj_ch1.file_name[:-4]}_line=true_filtred_N={N}.png'
-            obj_ch1.create_plot_data(filtred=True, add_vline=True, file_name=file_name, title=file_name)
-
-            data_analysis.print_processing_info(obj_ch1)
-
-            # Channel 2 :   ------------------------------------------
-            print('\n' + '-'*100 + '\n')
-            print(f'{Fore.BLACK}{Back.WHITE}+---------------------------+')
-            print(f'{Fore.BLACK}{Back.WHITE}|  Channel 2 : Current (A)  |')
-            print(f'{Fore.BLACK}{Back.WHITE}+---------------------------+')
-
-            obj_ch2.apply_moving_average(N)  # it will generate data into 'self.values_filtred' 
-            obj_ch2.calculate_delta_time()
-
-            # Create plot images :
-            # RAW
-            print("\nCreating Figures...")
-            file_name=f'{obj_ch2.file_name[:-4]}_line=false.png'
-            obj_ch2.create_plot_data(filtred=False, add_vline=False, file_name=file_name, title=file_name)
-
-            file_name=f'{obj_ch2.file_name[:-4]}_line=true.png'
-            obj_ch2.create_plot_data(filtred=False, add_vline=True, file_name=file_name, title=file_name)
-            
-            # FILTRED
-            file_name=f'{obj_ch2.file_name[:-4]}_line=false_filtred_N={N}.png'
-            obj_ch2.create_plot_data(filtred=True, add_vline=False, file_name=file_name, title=file_name)
-
-            file_name=f'{obj_ch2.file_name[:-4]}_line=true_filtred_N={N}.png'
-            obj_ch2.create_plot_data(filtred=True, add_vline=True, file_name=file_name, title=file_name)
-
-            data_analysis.print_processing_info(obj_ch2)
-
-            # Generate combine Excel File :
-            data_analysis.generate_excel_combined(obj_ch1, obj_ch2)
-
-
+        combined_files_processing(csv_directory, file_names_list)
     else:
-        for i, file_name in enumerate(file_names_list):
-            print(f"{Fore.BLACK}{Back.WHITE}\n\n[{i+1}/{len(file_names_list)}] Processing File : {file_name}\n")
-            #print(f"\n{'*'*120}\n{'*'*120}\n\n[{i+1}/{len(file_names_list)}] Processing File : {file_name}")
-            
-            output_dir_name = file_name[:-4]
-            data_analysis.create_dir(os.path.join(directory, processed_dir), dir_name=output_dir_name)
+        separate_files_processing(csv_directory, file_names_list)
 
-            if file_name[-5:-4] == '2':
-                calibration_value = 10
-            else:
-                calibration_value = 1
-            
-            obj = data_analysis.CSV_Object(file_path=os.path.join(directory, file_name),
-                                            processed_dir=os.path.join(processed_dir, output_dir_name),
-                                            calibration_value=calibration_value)
-            
-            obj.apply_moving_average(N)  # it will generate data into 'self.values_filtred' 
-            obj.calculate_delta_time()
 
-            # Create plot images :
-            # RAW
-            print("\nCreating Figures...")
-            file_name=f'{obj.file_name[:-4]}_line=false.png'
-            obj.create_plot_data(filtred=False, add_vline=False, file_name=file_name, title=file_name)
-            
-            file_name=f'{obj.file_name[:-4]}_line=true.png'
-            obj.create_plot_data(filtred=False, add_vline=True, file_name=file_name, title=file_name)
-            
-            # FILTRED 
-            file_name=f'{obj.file_name[:-4]}_line=false_filtred_N={N}.png'
-            obj.create_plot_data(filtred=True, add_vline=False, file_name=file_name, title=file_name)
-            
-            file_name=f'{obj.file_name[:-4]}_line=true_filtred_N={N}.png'
-            obj.create_plot_data(filtred=True, add_vline=True, file_name=file_name, title=file_name)
-
-            data_analysis.print_processing_info(obj)
-            obj.generate_excel()
-
-        
 if __name__ == '__main__':
     main()
     print(f"{Fore.BLACK}{Back.WHITE}\n\n{'='*40}   PROCESSING FINISHED   {'='*40}\n")
