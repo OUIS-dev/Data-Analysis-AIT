@@ -66,6 +66,7 @@ The output files are :
 # Installation
 
 Required Python 3+ to run
+(if 'pip' is not working while installation, please try using 'pip3')
 
 Clone repository :
 ```sh
@@ -80,14 +81,17 @@ $ cd data-analysis-ait
 Create new virtual envirement : 
 ```sh
 $ virtualenv env
-
+```
+- If virtualenv is not installed, you can install it using this command :
+```sh
+$ pip install virtualenv
 ```
 Activate the virtualenv :
-###### - Linux/Mac
+- Linux/Mac
 ```sh
 $ source env/bin/activate
 ```
-###### - Windows
+- Windows
 ```sh
 $ \env\Scripts\activate.bat
 ```
