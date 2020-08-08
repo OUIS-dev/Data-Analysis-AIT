@@ -18,18 +18,62 @@ The output files are :
 
 ### Actual Version  : 1.1
 
+### Changelog:
+
+#### v1.1 :
+- Enhenced Console Display.
+- Fixed file name in figure title.
+- Other minor changes.
+
+
+#### v1.0 :
+- Select Working directory where the CSV files are stored
+- Creation of new directory to save the processed data : Excel sheets + images
+- The script lists all 'CSV' files in the working directory, each one with its own index
+- The user select which indexes to process. The selection is possible using these methods:
+    - One File : input the file index
+    - Multiple Files (option 1) : input files indexes and separate wetween them with '.' or ',' or ';'
+    - Multiple Files (option 2) : input idx_start and idx_end separated by ':' to get all files having indexes between them
+    - All File : just input 'all' or 'a'
+- It is possible to process each file seprately, or as a combined channels (Ch1_Tension + Ch2_Current)
+- The implemented filter used to filter the data is SMA : Simple Moving Average with a windows Size = N (fixed in the main)
+    
+- The process of combined files ch1 + ch2:
+    - The files list will be displayed using same index for a combined files (ch1 + ch2)
+    - Select files to process
+    - For each File :
+        - Create new folder to save Excel + images
+        - Start by creating two (2) CSV_Object instances to load the data from CSV file
+        - For each instance ch1 and ch2 apply these methods/functions :
+            - apply_moving_average()
+            - calculate_delta_time() for both raw and filtred data
+            - create_plot_data() for both raw and filtred data
+        - Generate combined exel file with graphs using this function :
+            - generate_excel_combined()
+
+- The process of all files separetly :
+    - Select files indexes to process
+    - For each File :
+        - Create new folder to save Excel + images
+        - Start by creating a CSV_Object instance to load the data from CSV file
+        - apply_moving_average()
+        - calculate_delta_time() for both raw and filtred data
+        - create_plot_data() for both raw and filtred data
+        - Generate exel file with graphs using this method : generate_excel()
+     
+
 # Installation
 
 Required Python 3+ to run
 
 Clone repository :
 ```sh
-$ git clone https://github.com/OUIS-dev/Data-Analysis-AIT.git
+$ git clone https://github.com/OUIS-dev/data-analysis-ait.git
 ```
 
 Change directory to the new downloaded directory :
 ```sh
-$ cd Data-Analysis-AIT
+$ cd data-analysis-ait
 ```
 
 Create new virtual envirement : 
