@@ -99,7 +99,6 @@ $ cd data-analysis-ait
 ```sh
 $ virtualenv env
 ```
-- If virtualenv is not installed, you can install it using this command : ```$ pip install virtualenv```
 
 ### 4. Activate the virtualenv :
 - Linux or Mac :
