@@ -5,14 +5,14 @@
 
 
 ## Description
-Main Code to analyse data from 'Oscilator' CSV files containings Tension and Current Data for specific time period.
+Main Code to analyse data from **Oscilator CSV files** containings **Tension** and **Current** Data for specific time period.
 Each channel has it's own CSV file :
 - channel 1 : Tension (V) [..._Ch1.csv]
 - channel 2 : Current (A) [..._Ch2.csv]
 
 The output files are :
-- Excel Sheet containing all data and charts + info.
-- Figures images for each channel with Delta time (ms).
+- **Excel Sheet** containing all data and charts + info.
+- **Figures images** for each channel with Delta time (ms).
 
 ### Release Date    : 08-08-2020
 
@@ -21,7 +21,7 @@ The output files are :
 ### Changelog:
 
 #### v1.1 :
-- Added 'config.ini' file to set all default parameters inside.
+- Added **config.ini** file to set all default parameters inside.
 - Enhenced Console Display.
 - Fixed file name in figure title.
 - Other changes.
@@ -39,7 +39,7 @@ The output files are :
 - It is possible to process each file seprately, or as a combined channels (Ch1_Tension + Ch2_Current)
 - The implemented filter used to filter the data is SMA : Simple Moving Average with a windows Size = N (fixed in the main)
     
-- The process of combined files ch1 + ch2:
+- **The process of combined files ch1 + ch2 :**
     - The files list will be displayed using same index for a combined files (ch1 + ch2)
     - Select files to process
     - For each File :
@@ -52,7 +52,7 @@ The output files are :
         - Generate combined exel file with graphs using this function :
             - generate_excel_combined()
 
-- The process of all files separetly :
+- **The process of all files separetly :**
     - Select files indexes to process
     - For each File :
         - Create new folder to save Excel + images
@@ -66,12 +66,13 @@ The output files are :
 # Installation
 
 ### Requirement
-#### Python3 : To run the code
+**Python3** : To run the code
+
 Check installation : ```$ python --version```
 
 Download link : [https://www.python.org/downloads]
 
-#### Git + pip/pip3 + virtualenv : To install the code
+**Git + pip/pip3 + virtualenv** : To install the code
 
 Check installation :
 ```sh
