@@ -83,11 +83,11 @@ $ virtualenv env
 
 ```
 Activate the virtualenv :
-- Linux/Mac
+###### - Linux/Mac
 ```sh
 $ source env/bin/activate
 ```
-- Windows
+###### - Windows
 ```sh
 $ \env\Scripts\activate.bat
 ```
