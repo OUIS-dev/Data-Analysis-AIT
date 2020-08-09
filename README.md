@@ -1,4 +1,4 @@
-# data-analysis-ait
+# Data-Analysis-AIT
 
 
 ## Author :  Mohamed El Amine OUIS
@@ -32,6 +32,7 @@ The output files are :
     - threshold_high_ch2 : max threshold for Current : used to calculate delta time
 - Enhenced Console Display.
 - Fixed file name in figure title.
+- Added plt.close() after saving the figure to clear the memory.
 - Other changes.
 
 
