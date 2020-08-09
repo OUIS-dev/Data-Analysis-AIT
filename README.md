@@ -21,7 +21,15 @@ The output files are :
 ### Changelog:
 
 #### v1.1 :
-- Added **config.ini** file to set all default parameters inside.
+- Added **config.ini** file to set all default parameters inside. The configurable parameters are :
+    - N : filter window size
+    - processed_dir : Directory to store the generated files : Excel + Figures
+    - calibration_value_ch1 : Tension physical value (V) = Tension value * Calibration_value_ch1
+    - calibration_value_ch2 : Current physical value (A) = Current value * Calibration_value_ch2
+    - threshold_low_ch1 : min threshold for Tension : used to calculate delta time
+    - threshold_high_ch1 : max threshold for Tension : used to calculate delta time
+    - threshold_low_ch2 : min threshold for Current : used to calculate delta time
+    - threshold_high_ch2 : max threshold for Current : used to calculate delta time
 - Enhenced Console Display.
 - Fixed file name in figure title.
 - Other changes.
