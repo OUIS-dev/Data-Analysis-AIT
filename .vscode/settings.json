@@ -1,0 +1,10 @@
+{
+    "python.pythonPath": "env/bin/python",
+    "copy-syntax.defaults.lang": "python",
+    "copy-syntax.showMessage": false,
+    "copy-syntax.formatters.rtf": {
+    "style": "default",
+    "fontsize": 24,
+    "fontface": "Monaco"
+    }
+}

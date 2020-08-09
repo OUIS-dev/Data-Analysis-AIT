@@ -116,18 +116,18 @@ $ source env/bin/activate
 ```
 - Windows CMD :
 ```sh
-$ \env\Scripts\activate.bat
+$ env\Scripts\activate.bat
 ```
 
 ### 5. install required python packages :
 ```sh
-(env) $ pip install -r requirement.txt
+(env)       $ pip install -r requirement.txt
 ```
 
 ### 6. Run the script :
 ```sh
-(env) $ cd src
-(env) $ python main.py
+(env)       $ cd src
+(env)       $ python main.py
 ```
 
 # Usage Example
