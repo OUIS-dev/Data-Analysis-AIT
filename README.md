@@ -97,12 +97,12 @@ Install virtualenv : ```$ pip install virtualenv```
 
 ### 1. Clone repository :
 ```sh
-$ git clone https://github.com/OUIS-dev/data-analysis-ait.git
+$ git clone https://github.com/OUIS-dev/Data-Analysis-AIT.git
 ```
 
 ### 2. Change directory to the new downloaded directory :
 ```sh
-$ cd data-analysis-ait
+$ cd Data-Analysis-AIT
 ```
 
 ### 3. Create new virtual envirement : 
