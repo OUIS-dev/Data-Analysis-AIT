@@ -336,6 +336,7 @@ class CSV_Object():
         try:
             plt.savefig(image_path, dpi=dpi)
             print(f"Figure 'png' file created with success : '{image_file}'")
+            plt.close()
         except Exception as e:
             print(f"{Fore.RED}\nCould not create Figure 'png' file !! \nPNG path : {image_path}\nError Message : {e}")
 
